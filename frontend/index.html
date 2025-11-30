@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Movie Recommender AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-deep: #030014;
+            --bg-glass: rgba(17, 25, 40, 0.75);
+            --bg-glass-hover: rgba(29, 38, 54, 0.95);
+
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --text-gradient: linear-gradient(90deg, #c084fc, #db2777);
+
+            --primary: #7c3aed;
+            --border-glass: rgba(255, 255, 255, 0.125);
+
+            --radius-lg: 24px;
+            /* Increased radius for bigger cards */
+            --radius-pill: 9999px;
+
+            /* 3D Shadows */
+            --shadow-3d:
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 20px 40px -10px rgba(0, 0, 0, 0.8),
+                0 0 30px -5px rgba(124, 58, 237, 0.15);
+
+            --shadow-3d-hover:
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                0 30px 60px -12px rgba(0, 0, 0, 1),
+                0 0 50px -5px rgba(219, 39, 119, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* --- CUSTOM SCROLLBAR (THEMED) --- */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #c084fc, #db2777);
+            /* Matches "Recommendation Engine" gradient */
+            border-radius: var(--radius-pill);
+            border: 3px solid var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #db2777;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(219, 39, 119, 0.1), transparent 25%);
+        }
+
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(circle at 50% -20%, #2e1065 0%, transparent 60%);
+        }
+
+        .container {
+            max-width: 1100px;
+            /* Slightly wider for big cards */
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            text-align: center;
+            padding: 80px 0 60px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #d8b4fe;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.15);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            margin-top: 0;
+        }
+
+        .gradient-text {
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- NAVIGATION CARDS (UPDATED SIZE & SPACING) --- */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* Slightly wider columns */
+            gap: 30px;
+            /* Push the next section WAY down (30% of viewport height) */
+            margin-bottom: 30vh;
+        }
+
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+
+            /* INCREASED PADDING FOR SIZE */
+            padding: 24px;
+
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            box-shadow: var(--shadow-3d);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Center content vertically */
+            min-height: 260px;
+            /* Force minimum height */
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: var(--bg-glass-hover);
+            border-color: rgba(192, 132, 252, 0.4);
+            box-shadow: var(--shadow-3d-hover);
+        }
+
+        .icon-box {
+            /* INCREASED ICON BOX SIZE */
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4c1d95, #2e1065);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: #fff;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* INCREASED SVG SIZE */
+        .icon-box svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* INCREASED TEXT SIZES */
+        .glass-card h3 {
+            font-size: 1.25rem;
+            margin: 0 0 12px;
+            color: #fff;
+        }
+
+        .glass-card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* --- SECTION CONTAINERS --- */
+        .section-container {
+            scroll-margin-top: 40px;
+            margin-bottom: 120px;
+        }
+
+        .section-title {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .divider {
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(90deg, var(--border-glass), transparent);
+        }
+
+        /* --- RECOMMENDER INPUT --- */
+        .input-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-pill);
+            padding: 10px 10px 10px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+        }
+
+        #movieInput {
+            background: transparent;
+            border: none;
+            color: #fff;
+            flex: 1;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .btn-add {
+            background: #1e293b;
+            color: #fff;
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-pill);
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #334155;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px;
+            min-height: 40px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(219, 39, 119, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #e9d5ff;
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag span.close {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .tag span.close:hover {
+            opacity: 1;
+            color: #fff;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: var(--radius-pill);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(219, 39, 119, 0.6);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- RESULTS STYLING --- */
+        .results-container {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .result-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            padding: 20px 28px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+
+        .result-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Rank 1: Gold */
+        .result-card:nth-child(1) {
+            background: linear-gradient(90deg, rgba(234, 179, 8, 0.15), transparent);
+            border: 1px solid rgba(234, 179, 8, 0.5);
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.2);
+            transform: scale(1.02);
+            margin-bottom: 10px;
+        }
+
+        .result-card:nth-child(1) .rank {
+            color: #facc15;
+            text-shadow: 0 0 10px rgba(234, 179, 8, 0.6);
+        }
+
+        .result-card:nth-child(1) .movie-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.25rem;
+        }
+
+        /* Rank 2: Silver */
+        .result-card:nth-child(2) {
+            background: linear-gradient(90deg, rgba(148, 163, 184, 0.15), transparent);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            box-shadow: 0 0 20px rgba(148, 163, 184, 0.15);
+            margin-bottom: 10px;
+        }
+
+        .result-card:nth-child(2) .rank {
+            color: #e2e8f0;
+        }
+
+        .result-card:nth-child(2) .movie-title {
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        /* Rank 3: Bronze */
+        .result-card:nth-child(3) {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.15), transparent);
+            border: 1px solid rgba(249, 115, 22, 0.5);
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
+            margin-bottom: 10px;
+        }
+
+        .result-card:nth-child(3) .rank {
+            color: #fdba74;
+        }
+
+        .result-card:nth-child(3) .movie-title {
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .rank {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.2);
+            margin-right: 24px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .movie-title {
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #f1f5f9;
+        }
+
+        /* --- CHARTS & DIAGRAMS --- */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .chart-card {
+            background: #0f172a;
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            width: 100%;
+            box-shadow: var(--shadow-3d);
+        }
+
+        .chart-header {
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        .chart-header h3 {
+            font-size: 1.2rem;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-img-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #0b1121;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .chart-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 550px;
+            object-fit: contain;
+        }
+
+        .placeholder-box {
+            width: 100%;
+            min-height: 350px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px dashed var(--border-glass);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .placeholder-box:hover {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.05);
+        }
+
+        .placeholder-icon {
+            width: 56px;
+            height: 56px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+                margin-bottom: 20vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-light"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="badge">AWS Cloud Powered</div>
+            <h1>
+                Intelligent Movie<br>
+                <span class="gradient-text">Recommendation Engine</span>
+            </h1>
+            <p>
+                A highly customizable, cloud-native recommender system. <br>
+                Powered by Hybrid Filtering and Real-time Inference.
+            </p>
+        </header>
+
+        <div class="nav-grid">
+            <div class="glass-card" onclick="scrollToSection('recommender')">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 3l14 9-14 9V3z" />
+                    </svg>
+                </div>
+                <h3>Launch Recommender</h3>
+                <p>Input your favorite movies and get instant, personalized suggestions via our API.</p>
+            </div>
+
+            <div class="glass-card" onclick="scrollToSection('architecture')">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 12h20M2 12l5-5m-5 5l5 5M22 12l-5-5m5 5l-5 5" />
+                    </svg>
+                </div>
+                <h3>System Architecture</h3>
+                <p>View the cloud infrastructure and ML model data flow diagrams.</p>
+            </div>
+
+            <div class="glass-card" onclick="scrollToSection('analysis')">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 20V10M12 20V4M6 20v-6" />
+                    </svg>
+                </div>
+                <h3>Dataset Analysis</h3>
+                <p>Deep dive into the MovieLens dataset with pre-computed visualizations.</p>
+            </div>
+        </div>
+
+        <div id="recommender" class="section-container">
+            <div class="section-title">
+                <h2>Live Demo</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="input-wrapper">
+                <input type="text" id="movieInput" placeholder="Type a movie name (e.g., The Matrix)..."
+                    onkeypress="handleKeyPress(event)">
+                <button class="btn-add" onclick="addMovie()">Add</button>
+            </div>
+
+            <div id="selectedMoviesContainer" class="tags-container"></div>
+
+            <div class="action-row">
+                <button id="generateBtn" class="btn-primary" onclick="getRecommendations()" disabled>Generate
+                    Recommendations</button>
+            </div>
+
+            <div id="recommendationResults" class="results-container"></div>
+        </div>
+
+        <div id="architecture" class="section-container">
+            <div class="section-title">
+                <h2>System Architecture & Workflow</h2>
+                <div class="divider"></div>
+            </div>
+
+            <div class="charts-stack">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>High Level Design (Architecture)</h3>
+                    </div>
+                    <div class="placeholder-box">
+                        <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <p>Architecture Diagram Placeholder</p>
+                        <small style="color:var(--text-muted); margin-top:5px;">(Add image later)</small>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>ML Model Flow Chart</h3>
+                    </div>
+                    <div class="placeholder-box">
+                        <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <p>ML Workflow Diagram Placeholder</p>
+                        <small style="color:var(--text-muted); margin-top:5px;">(Add image later)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="analysis" class="section-container">
+            <div class="section-title">
+                <h2>Data Analytics Dashboard</h2>
+                <div class="divider"></div>
+            </div>
+            <div id="plots" class="charts-stack"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = "http://127.0.0.1:8000/recommend/titles";
+
+        const S3_PROCESSED_BUCKET_URL = "https://it457-movie-processed-data-mvfy-project-a.s3.us-east-1.amazonaws.com/analysis_plots/";
+        const PLOT_FILES = [
+            "rating_distribution.png",
+            "avg_rating_per_genre.png",
+            "most_rated_movies.png",
+            "top_rated_movies.png"
+        ];
+
+        let selectedMovies = [];
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function renderSelectedMovies() {
+            const container = document.getElementById("selectedMoviesContainer");
+            container.innerHTML = "";
+
+            if (selectedMovies.length === 0) {
+                container.innerHTML = `<span style="color:var(--text-muted); font-size:0.9rem;">No movies added yet.</span>`;
+            }
+
+            selectedMovies.forEach((title, index) => {
+                const tag = document.createElement("div");
+                tag.className = "tag";
+                tag.innerHTML = `<span>${title}</span><span class="close" onclick="removeMovie(${index})">&times;</span>`;
+                container.appendChild(tag);
+            });
+            updateBtnState();
+        }
+
+        function addMovie() {
+            const input = document.getElementById("movieInput");
+            const val = input.value.trim();
+            if (!val) return;
+            if (!selectedMovies.some(m => m.toLowerCase() === val.toLowerCase())) {
+                selectedMovies.push(val);
+                renderSelectedMovies();
+            }
+            input.value = "";
+        }
+
+        function removeMovie(idx) {
+            selectedMovies.splice(idx, 1);
+            renderSelectedMovies();
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') addMovie();
+        }
+
+        function updateBtnState() {
+            const btn = document.getElementById("generateBtn");
+            btn.disabled = selectedMovies.length === 0;
+            btn.innerText = selectedMovies.length === 0 ? "Add Movies to Start" : "Generate Recommendations";
+        }
+
+        async function getRecommendations() {
+            const container = document.getElementById("recommendationResults");
+            const btn = document.getElementById("generateBtn");
+
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">Analysing preferences via Hybrid Filtering...</div>`;
+
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ movies: selectedMovies, top_k: 10 })
+                });
+
+                if (!response.ok) throw new Error("API Error");
+                const data = await response.json();
+
+                if (!data.recommendations || data.recommendations.length === 0) {
+                    container.innerHTML = `<div style="color: #ef4444; padding:20px; text-align:center;">No recommendations found. Try standard titles.</div>`;
+                    return;
+                }
+
+                let html = "";
+                data.recommendations.forEach((rec, idx) => {
+                    html += `
+                        <div class="result-card">
+                            <div style="display:flex; align-items:center;">
+                                <span class="rank">#${idx + 1}</span>
+                                <span class="movie-title">${rec.title}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if (data.missing_movies && data.missing_movies.length > 0) {
+                    html += `<div style="margin-top:20px; color:#ef4444; font-size:0.85rem; padding:0 20px;">ignored unknown titles: ${data.missing_movies.join(", ")}</div>`;
+                }
+
+                container.innerHTML = html;
+
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = `<div style="color: #ef4444; padding:20px; text-align:center;">Connection Error. Is the backend running?</div>`;
+            } finally {
+                updateBtnState();
+            }
+        }
+
+        function displayPlots() {
+            const container = document.getElementById("plots");
+            let html = "";
+            PLOT_FILES.forEach(file => {
+                const url = S3_PROCESSED_BUCKET_URL + file;
+                const title = file.replace(/_/g, " ").replace(".png", "");
+                html += `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>${title}</h3>
+                        </div>
+                        <div class="chart-img-wrapper">
+                            <img src="${url}" class="chart-img" loading="lazy" alt="${title}">
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        window.onload = () => {
+            renderSelectedMovies();
+            displayPlots();
+        };
+    </script>
+</body>
+
+</html>

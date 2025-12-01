@@ -596,13 +596,10 @@
                         <h3>High Level Design (Architecture)</h3>
                     </div>
                     <div class="placeholder-box">
-                        <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                            </path>
-                        </svg>
-                        <p>Architecture Diagram Placeholder</p>
-                        <small style="color:var(--text-muted); margin-top:5px;">(Add image later)</small>
+                        <img src="https://it457-movie-processed-data-mvfy-project-a.s3.us-east-1.amazonaws.com/analysis_plots/Architecture (1).png" 
+                             class="chart-img" 
+                             alt="System Architecture">
+                        <p>Architecture Diagram </p>
                     </div>
                 </div>
 
@@ -611,13 +608,11 @@
                         <h3>ML Model Flow Chart</h3>
                     </div>
                     <div class="placeholder-box">
-                        <svg class="placeholder-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                        </svg>
+                        <img src="https://it457-movie-processed-data-mvfy-project-a.s3.us-east-1.amazonaws.com/analysis_plots/ML_Flow.png" 
+                             class="chart-img" 
+                             alt="ML Flow Architecture">
                         <p>ML Workflow Diagram Placeholder</p>
-                        <small style="color:var(--text-muted); margin-top:5px;">(Add image later)</small>
+                        
                     </div>
                 </div>
             </div>
@@ -633,14 +628,14 @@
     </div>
 
     <script>
-        const API_ENDPOINT = "http://127.0.0.1:8000/recommend/titles";
+        const API_ENDPOINT = "http://54.161.20.193:5000/recommend/titles";
 
         const S3_PROCESSED_BUCKET_URL = "https://it457-movie-processed-data-mvfy-project-a.s3.us-east-1.amazonaws.com/analysis_plots/";
         const PLOT_FILES = [
-            "rating_distribution.png",
-            "avg_rating_per_genre.png",
-            "most_rated_movies.png",
-            "top_rated_movies.png"
+            "movie-ratings.jpeg",
+            "top-10-ratings.jpeg",
+            "top-15-genres.jpeg",
+            "min-50-ratings.jpeg"
         ];
 
         let selectedMovies = [];
@@ -749,7 +744,7 @@
             let html = "";
             PLOT_FILES.forEach(file => {
                 const url = S3_PROCESSED_BUCKET_URL + file;
-                const title = file.replace(/_/g, " ").replace(".png", "");
+                const title = file.replace(/_/g, " ").replace(/-/g, " ").replace(/\.[^/.]+$/, "");
                 html += `
                     <div class="chart-card">
                         <div class="chart-header">

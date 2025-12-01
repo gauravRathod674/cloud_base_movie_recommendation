@@ -1,0 +1,28 @@
+{
+    "Buckets": [
+        {
+            "Name": "it457-movie-frontend-app-mvfy-project-a",
+            "CreationDate": "2025-11-10T17:18:39+00:00",
+            "BucketArn": "arn:aws:s3:::it457-movie-frontend-app-mvfy-project-a"
+        },
+        {
+            "Name": "it457-movie-processed-data-mvfy-project-a",
+            "CreationDate": "2025-11-10T17:18:37+00:00",
+            "BucketArn": "arn:aws:s3:::it457-movie-processed-data-mvfy-project-a"
+        },
+        {
+            "Name": "it457-movie-raw-data-mvfy-project-a",
+            "CreationDate": "2025-11-10T17:18:33+00:00",
+            "BucketArn": "arn:aws:s3:::it457-movie-raw-data-mvfy-project-a"
+        },
+        {
+            "Name": "movie-app-frontend-final",
+            "CreationDate": "2025-12-01T09:04:24+00:00",
+            "BucketArn": "arn:aws:s3:::movie-app-frontend-final"
+        }
+    ],
+    "Owner": {
+        "ID": "1f38898722fc258f8bdb4c482a5512a23d22842040404ca0a4163d6f04556cf1"
+    },
+    "Prefix": null
+}

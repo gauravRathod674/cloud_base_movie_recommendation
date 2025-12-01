@@ -1,0 +1,163 @@
+{
+    "Reservations": [
+        {
+            "ReservationId": "r-0942a55be283d5e72",
+            "OwnerId": "495599742493",
+            "Groups": [],
+            "Instances": [
+                {
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [
+                        {
+                            "DeviceName": "/dev/xvda",
+                            "Ebs": {
+                                "AttachTime": "2025-12-01T08:30:39+00:00",
+                                "DeleteOnTermination": true,
+                                "Status": "attached",
+                                "VolumeId": "vol-0f1c7a3fa1ee62220"
+                            }
+                        }
+                    ],
+                    "ClientToken": "5b18c611-01f7-414d-a86f-6bdb7a5c3a0b",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [
+                        {
+                            "Association": {
+                                "IpOwnerId": "amazon",
+                                "PublicDnsName": "ec2-54-161-20-193.compute-1.amazonaws.com",
+                                "PublicIp": "54.161.20.193"
+                            },
+                            "Attachment": {
+                                "AttachTime": "2025-12-01T08:30:38+00:00",
+                                "AttachmentId": "eni-attach-023e131c3fd87d078",
+                                "DeleteOnTermination": true,
+                                "DeviceIndex": 0,
+                                "Status": "attached",
+                                "NetworkCardIndex": 0
+                            },
+                            "Description": "",
+                            "Groups": [
+                                {
+                                    "GroupId": "sg-0b20d8ebd0d9d0de5",
+                                    "GroupName": "launch-wizard-5"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "MacAddress": "0a:ff:f9:bc:0e:81",
+                            "NetworkInterfaceId": "eni-0615e52c9fc43cdad",
+                            "OwnerId": "495599742493",
+                            "PrivateDnsName": "ip-172-31-27-115.ec2.internal",
+                            "PrivateIpAddress": "172.31.27.115",
+                            "PrivateIpAddresses": [
+                                {
+                                    "Association": {
+                                        "IpOwnerId": "amazon",
+                                        "PublicDnsName": "ec2-54-161-20-193.compute-1.amazonaws.com",
+                                        "PublicIp": "54.161.20.193"
+                                    },
+                                    "Primary": true,
+                                    "PrivateDnsName": "ip-172-31-27-115.ec2.internal",
+                                    "PrivateIpAddress": "172.31.27.115"
+                                }
+                            ],
+                            "SourceDestCheck": true,
+                            "Status": "in-use",
+                            "SubnetId": "subnet-0cec1275b7f296d1d",
+                            "VpcId": "vpc-08a7ae84fc8191304",
+                            "InterfaceType": "interface",
+                            "Operator": {
+                                "Managed": false
+                            }
+                        }
+                    ],
+                    "RootDeviceName": "/dev/xvda",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [
+                        {
+                            "GroupId": "sg-0b20d8ebd0d9d0de5",
+                            "GroupName": "launch-wizard-5"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Tags": [
+                        {
+                            "Key": "Name",
+                            "Value": "Movie-App-Server"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 1,
+                        "ThreadsPerCore": 1
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "applied",
+                        "HttpTokens": "required",
+                        "HttpPutResponseHopLimit": 2,
+                        "HttpEndpoint": "enabled",
+                        "HttpProtocolIpv6": "disabled",
+                        "InstanceMetadataTags": "disabled"
+                    },
+                    "EnclaveOptions": {
+                        "Enabled": false
+                    },
+                    "BootMode": "uefi-preferred",
+                    "PlatformDetails": "Linux/UNIX",
+                    "UsageOperation": "RunInstances",
+                    "UsageOperationUpdateTime": "2025-12-01T08:30:38+00:00",
+                    "PrivateDnsNameOptions": {
+                        "HostnameType": "ip-name",
+                        "EnableResourceNameDnsARecord": true,
+                        "EnableResourceNameDnsAAAARecord": false
+                    },
+                    "MaintenanceOptions": {
+                        "AutoRecovery": "default",
+                        "RebootMigration": "default"
+                    },
+                    "CurrentInstanceBootMode": "legacy-bios",
+                    "NetworkPerformanceOptions": {
+                        "BandwidthWeighting": "default"
+                    },
+                    "Operator": {
+                        "Managed": false
+                    },
+                    "InstanceId": "i-017fefcf8d118289f",
+                    "ImageId": "ami-0fa3fe0fa7920f68e",
+                    "State": {
+                        "Code": 16,
+                        "Name": "running"
+                    },
+                    "PrivateDnsName": "ip-172-31-27-115.ec2.internal",
+                    "PublicDnsName": "ec2-54-161-20-193.compute-1.amazonaws.com",
+                    "StateTransitionReason": "",
+                    "KeyName": "movie-app-key",
+                    "AmiLaunchIndex": 0,
+                    "ProductCodes": [],
+                    "InstanceType": "t2.micro",
+                    "LaunchTime": "2025-12-01T08:30:38+00:00",
+                    "Placement": {
+                        "AvailabilityZoneId": "use1-az4",
+                        "GroupName": "",
+                        "Tenancy": "default",
+                        "AvailabilityZone": "us-east-1b"
+                    },
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "SubnetId": "subnet-0cec1275b7f296d1d",
+                    "VpcId": "vpc-08a7ae84fc8191304",
+                    "PrivateIpAddress": "172.31.27.115",
+                    "PublicIpAddress": "54.161.20.193"
+                }
+            ]
+        }
+    ]
+}
